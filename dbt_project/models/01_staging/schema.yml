@@ -1,0 +1,184 @@
+version: 2
+
+models:
+
+  - name: stg_customers
+
+    description: >
+      Cleaned customer records from the Olist raw source.
+
+    columns:
+
+      - name: customer_id
+        description: Customer order-level identifier.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_unique_id
+        description: Persistent customer identifier.
+        data_tests:
+          - not_null
+
+      - name: customer_state
+        data_tests:
+          - not_null
+
+
+  - name: stg_orders
+
+    description: Cleaned Olist order records.
+
+    columns:
+
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+      - name: order_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - delivered
+                - shipped
+                - canceled
+                - invoiced
+                - processing
+                - unavailable
+                - approved
+                - created
+
+
+  - name: stg_order_items
+
+    description: Order line items.
+
+    columns:
+
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: product_id
+        data_tests:
+          - not_null
+
+      - name: seller_id
+        data_tests:
+          - not_null
+
+      - name: price
+        data_tests:
+          - not_null
+
+      - name: freight_value
+        data_tests:
+          - not_null
+
+
+  - name: stg_order_payments
+
+    description: Order payment records.
+
+    columns:
+
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: payment_type
+        data_tests:
+          - accepted_values:
+              values:
+                - credit_card
+                - boleto
+                - voucher
+                - debit_card
+                - not_defined
+
+
+  - name: stg_order_reviews
+
+    description: Customer reviews.
+
+    columns:
+
+      - name: review_id
+        data_tests:
+          - not_null
+
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: review_score
+        data_tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+
+
+  - name: stg_products
+
+    description: Product master records.
+
+    columns:
+
+      - name: product_id
+        data_tests:
+          - not_null
+          - unique
+
+
+  - name: stg_sellers
+
+    description: Seller master records.
+
+    columns:
+
+      - name: seller_id
+        data_tests:
+          - not_null
+          - unique
+
+
+  - name: stg_geolocation
+
+    description: >
+      Deduplicated geolocation data with one row per ZIP prefix.
+
+    columns:
+
+      - name: geolocation_zip_code_prefix
+        data_tests:
+          - not_null
+          - unique
+
+
+  - name: stg_product_categories
+
+    description: Product category translations.
+
+    columns:
+
+      - name: product_category_name
+        data_tests:
+          - not_null
+          - unique

@@ -1,0 +1,238 @@
+version: 2
+
+sources:
+
+  - name: olist_raw
+
+    database: OLIST_DB
+    schema: RAW
+
+    description: >
+      Raw Olist Brazilian E-commerce data loaded into Snowflake.
+
+    tables:
+
+      - name: raw_customers
+
+        description: >
+          Customer master data.
+
+        columns:
+
+          - name: customer_id
+            description: >
+              Unique identifier for an order-specific customer record.
+
+          - name: customer_unique_id
+            description: >
+              Persistent customer identifier across orders.
+
+          - name: customer_zip_code_prefix
+            description: >
+              First five digits of customer ZIP code.
+
+          - name: customer_city
+            description: Customer city.
+
+          - name: customer_state
+            description: Customer state.
+
+
+      - name: raw_orders
+
+        description: >
+          Olist order header data.
+
+        columns:
+
+          - name: order_id
+            description: Unique order identifier.
+            data_tests:
+              - not_null
+              - unique
+
+          - name: customer_id
+            description: Customer identifier.
+
+          - name: order_status
+            description: Current order status.
+
+          - name: order_purchase_timestamp
+            description: Timestamp when the order was placed.
+
+          - name: order_approved_at
+            description: Timestamp when payment was approved.
+
+          - name: order_delivered_carrier_date
+            description: Timestamp when order was handed to carrier.
+
+          - name: order_delivered_customer_date
+            description: Timestamp when customer received order.
+
+          - name: order_estimated_delivery_date
+            description: Estimated delivery date.
+
+
+      - name: raw_order_items
+
+        description: >
+          Individual items belonging to customer orders.
+
+        columns:
+
+          - name: order_id
+            description: Order identifier.
+
+          - name: order_item_id
+            description: Sequential item number within order.
+
+          - name: product_id
+            description: Product identifier.
+
+          - name: seller_id
+            description: Seller identifier.
+
+          - name: shipping_limit_date
+            description: Seller shipping deadline.
+
+          - name: price
+            description: Item price.
+
+          - name: freight_value
+            description: Freight cost.
+
+
+      - name: raw_order_payments
+
+        description: >
+          Payment information for Olist orders.
+
+        columns:
+
+          - name: order_id
+            description: Order identifier.
+
+          - name: payment_sequential
+            description: Payment sequence number.
+
+          - name: payment_type
+            description: Payment method.
+
+          - name: payment_installments
+            description: Number of installments.
+
+          - name: payment_value
+            description: Payment amount.
+
+
+      - name: raw_order_reviews
+
+        description: >
+          Customer reviews for orders.
+
+        columns:
+
+          - name: review_id
+            description: Review identifier.
+
+          - name: order_id
+            description: Order identifier.
+
+          - name: review_score
+            description: Customer review score from 1 to 5.
+
+          - name: review_comment_title
+            description: Review title.
+
+          - name: review_comment_message
+            description: Review message.
+
+          - name: review_creation_date
+            description: Review creation timestamp.
+
+          - name: review_answer_timestamp
+            description: Review answer timestamp.
+
+
+      - name: raw_products
+
+        description: >
+          Product master data.
+
+        columns:
+
+          - name: product_id
+            description: Unique product identifier.
+
+          - name: product_category_name
+            description: Product category.
+
+          - name: product_name_length
+            description: Product name length.
+
+          - name: product_description_length
+            description: Product description length.
+
+          - name: product_photos_qty
+            description: Number of product photos.
+
+          - name: product_weight_g
+            description: Product weight in grams.
+
+          - name: product_length_cm
+            description: Product length.
+
+          - name: product_height_cm
+            description: Product height.
+
+          - name: product_width_cm
+            description: Product width.
+
+
+      - name: raw_sellers
+
+        description: >
+          Olist seller master data.
+
+        columns:
+
+          - name: seller_id
+            description: Seller identifier.
+
+          - name: seller_zip_code_prefix
+            description: Seller ZIP prefix.
+
+          - name: seller_city
+            description: Seller city.
+
+          - name: seller_state
+            description: Seller state.
+
+
+      - name: raw_geolocation
+
+        description: >
+          Brazilian ZIP-code geolocation information.
+
+        columns:
+
+          - name: geolocation_zip_code_prefix
+            description: ZIP code prefix.
+
+          - name: geolocation_lat
+            description: Latitude.
+
+          - name: geolocation_lng
+            description: Longitude.
+
+          - name: geolocation_city
+            description: City.
+
+          - name: geolocation_state
+            description: State.
+
+
+      - name: raw_product_category_translation
+
+        description: >
+          Portuguese to English product category translation.
