@@ -1,0 +1,167 @@
+
+version: 2
+
+models:
+
+  - name: fct_sales
+
+    description: >
+      ## Sales Fact
+
+      Grain:
+      One row per order item.
+
+      Contains:
+      - Order information
+      - Product information
+      - Seller information
+      - Customer information
+      - Sales metrics
+      - Delivery metrics
+
+      Primary analytical use:
+      Revenue and sales analysis
+
+
+    columns:
+
+      - name: sales_sk
+        description: Surrogate key for the sales fact.
+        data_tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        data_tests:
+          - not_null
+
+      - name: product_id
+        data_tests:
+          - not_null
+
+      - name: seller_id
+        data_tests:
+          - not_null
+
+      - name: customer_id
+        data_tests:
+          - not_null
+
+      - name: price
+        data_tests:
+          - not_null
+
+
+  - name: dim_customer
+
+    description: Current-state customer dimension.
+
+    columns:
+
+      - name: customer_sk
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+
+      - name: customer_state
+        data_tests:
+          - not_null
+
+
+  - name: dim_customer_scd2
+
+    description: >
+      Historical Type 2 customer dimension.
+
+    columns:
+
+      - name: customer_sk
+        data_tests:
+          - not_null
+          - unique
+
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+
+      - name: valid_from
+        data_tests:
+          - not_null
+
+
+  - name: dim_product
+
+    description: Product dimension.
+
+    columns:
+
+      - name: product_sk
+        data_tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        data_tests:
+          - not_null
+          - unique
+
+
+  - name: dim_seller
+
+    description: Seller dimension.
+
+    columns:
+
+      - name: seller_sk
+        data_tests:
+          - not_null
+          - unique
+
+      - name: seller_id
+        data_tests:
+          - not_null
+          - unique
+
+
+  - name: mart_sales_performance
+
+    description: >
+      Aggregated sales performance mart for BI reporting.
+
+    columns:
+
+      - name: order_date
+        data_tests:
+          - not_null
+
+      - name: gross_sales
+        data_tests:
+          - not_null
+
+
+  - name: mart_customer_360
+
+    description: >
+      Customer-level analytical mart containing
+      lifetime value, order behavior and segmentation.
+
+    columns:
+
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: total_orders
+        data_tests:
+          - not_null
+
+      - name: lifetime_value
+        description: >
+          {{ doc('customer_lifetime_value') }}
+        data_tests:
+          - not_null
