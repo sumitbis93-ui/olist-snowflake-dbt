@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+.venv/
+venv/
+
+# Secrets
+*.pem
+*.key
+*.p8
+
+# dbt
+target/
+logs/
+dbt_packages/
+partial_parse.msgpack
+
+# Airflow
+.airflowignore
+
+# Astro
+.astro/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
